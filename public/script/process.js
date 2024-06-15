@@ -5,7 +5,7 @@ document.getElementById('similarity-form').addEventListener('submit', async func
 
     document.getElementById('loading-spinner').classList.remove('hidden');
 
-    const response = await fetch('http://localhost:8080/Data_Set/similarities_with_scores.csv');
+    const response = await fetch('../Data_Set/similarities_with_scores.csv');
     if (!response.ok) {
         console.error('Failed to fetch data:', response.status);
         return;
@@ -26,7 +26,7 @@ document.getElementById('similarity-form').addEventListener('submit', async func
         score: parseFloat(row[fileIndex])
     })).sort((a, b) => b.score - a.score).slice(1);
 
-    const tagsResponse = await fetch('http://localhost:8080/Data_Set/leetinfo.csv');
+    const tagsResponse = await fetch('../Data_Set/leetinfo.csv');
     const tagsData = await tagsResponse.text();
     const tagsRows = tagsData.split('\n').map(row => row.split(','));
     const tagsMap = new Map(tagsRows.slice(1).map(row => {
@@ -146,7 +146,7 @@ document.getElementById('comparison-form').addEventListener('submit', async func
     const fileName1 = url1.split('/').slice(-2, -1)[0];
     const fileName2 = url2.split('/').slice(-2, -1)[0];
 
-    const response = await fetch('http://localhost:8080/Data_Set/similarities_with_scores.csv');
+    const response = await fetch('../Data_Set/similarities_with_scores.csv');
     const data = await response.text();
     const rows = data.split('\n').map(row => row.split(','));
     const headers = rows[0];
