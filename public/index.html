@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeetHelper</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: rgb(0, 0, 0);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="w-full max-w-4xl mx-auto px-4 py-8 md:px-6 md:py-12">
+        <div class="flex justify-center gap-4 mb-6">
+            <button id="show-finder" class="px-4 py-2 bg-yellow-500 text-white rounded-md">Problem Suggestions</button>
+            <button id="show-comparator" class="px-4 py-2 bg-yellow-500 text-white rounded-md">Problem Comparator</button>
+        </div>
+        <div id="problem-finder" class="flex flex-col gap-6">
+            <div class="space-y-2">
+                <h1 class="text-3xl font-bold" style="color: white;">Problem Suggestions</h1>
+                <p class="text-gray-500 dark:text-gray-400">Enter a LeetCode problem URL to find similar problems. URL should be in the form <code>https://leetcode.com/problems/<i>problem-name</i>/</code>.</p>
+            </div>
+            <form id="similarity-form" class="flex items-center gap-4">
+                <input id="leetcode-url" class="flex h-10 w-full bg-background ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-1 rounded-md border border-gray-300 px-4 py-2 text-sm focus:border-gray-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
+                    placeholder="Enter a LeetCode problem URL" type="text" name="leetcode-url" />
+                <button type="submit" class="inline-flex items-center justify-center whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 rounded-md bg-yellow-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:bg-gray-600 dark:hover:bg-gray-500 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-800">
+                    Find
+                </button>
+            </form>
+
+            <div id="loading-spinner" class="hidden flex justify-center items-center mt-4">
+                <style>
+                    .loader {
+                        border: 10px solid #f3f3f3;
+                        border-top: 10px solid #3498db;
+                        border-radius: 50%;
+                        width: 70px;
+                        height: 70px;
+                        animation: spin 2s linear infinite;
+                    }
+                    
+                    @keyframes spin {
+                        0% {
+                            transform: rotate(0deg);
+                        }
+                        100% {
+                            transform: rotate(360deg);
+                        }
+                    }
+                </style>
+                <div class="loader"></div>
+                <span class="ml-4 text-gray-500 dark:text-gray-400">Fetching..</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full table-auto rounded-md border border-gray-300 dark:border-gray-600">
+                    <thead>
+                        <tr class="bg-gray-100 dark:bg-gray-800">
+                            <th class="px-4 py-3 text-left text-sm font-medium text-gray-900 dark:text-gray-200">Problem Title
+                            </th>
+                            <th class="px-4 py-3 text-left text-sm font-medium text-gray-900 dark:text-gray-200">
+                                Similarity Score</th>
+                            <th class="px-4 py-3 text-left text-sm font-medium text-gray-900 dark:text-gray-200">Tagged Topics
+                            </th>
+                            <th class="px-4 py-3 text-left text-sm font-medium text-gray-900 dark:text-gray-200">Difficulty</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results-table" class="bg-white divide-y divide-gray-300">
+                        <!-- Results will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="flex justify-between mt-4">
+                <button id="prev-page" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md disabled:opacity-50" disabled>Previous</button>
+                <button id="next-page" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md disabled:opacity-50" disabled>Next</button>
+            </div>
+        </div>
+
+        <div id="problem-comparator" class="flex flex-col gap-6 hidden">
+            <div class="space-y-2">
+                <h1 class="text-3xl font-bold">LeetCode Problem Comparator</h1>
+                <p class="text-gray-500 dark:text-gray-400">Enter two LeetCode problem URLs to compare their similarity. URLs should be in the form <code>https://leetcode.com/problems/<i>problem-name</i>/</code>.</p>
+            </div>
+            <form id="comparison-form" class="flex flex-col gap-4">
+                <input id="leetcode-url-1" class="flex h-10 w-full bg-background ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-1 rounded-md border border-gray-300 px-4 py-2 text-sm focus:border-gray-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
+                    placeholder="Enter the first LeetCode problem URL" type="text" name="leetcode-url-1" />
+                <input id="leetcode-url-2" class="flex h-10 w-full bg-background ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-1 rounded-md border border-gray-300 px-4 py-2 text-sm focus:border-gray-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
+                    placeholder="Enter the second LeetCode problem URL" type="text" name="leetcode-url-2" />
+                <button type="submit" class="inline-flex items-center justify-center whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:bg-gray-600 dark:hover:bg-gray-500 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-800">
+                    Compare
+                </button>
+            </form>
+
+            <div id="comparison-result" class="hidden flex justify-center items-center mt-4">
+                <span class="ml-4 text-gray-500 dark:text-gray-400">Similarity Score: <span id="similarity-score"></span></span>
+            </div>
+        </div>
+
+
+    </div>
+    <script src="./script/process.js">
+    </script>
+
+</body>
