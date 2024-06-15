@@ -1,0 +1,9 @@
+langchain
+openai
+pandas
+numpy
+tqdm
+unstructured
+python-dotenv
+pypdf
+scikit-learn
