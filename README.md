@@ -1,4 +1,4 @@
-#LeetHelper
+LeetHelper
 
 A Leetcode problem suggestion website to help with more efficient practice based on question provided.
 
