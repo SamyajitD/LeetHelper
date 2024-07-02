@@ -1,12 +1,11 @@
 document.getElementById('similarity-form').addEventListener('submit', async function(event) {
     event.preventDefault();
     const url = document.getElementById('leetcode-url').value;
-    const urlSplit = url.split('/');
-    const fileName = urlSplit[urlSplit.length - 1];
+    const fileName = url.split('/').slice(-2, -1)[0];
 
     document.getElementById('loading-spinner').classList.remove('hidden');
 
-    const response = await fetch('/Data_Set/similarities_with_scores.csv');
+    const response = await fetch('../Data_Set/similarities_with_scores.csv');
     if (!response.ok) {
         console.error('Failed to fetch data:', response.status);
         return;
@@ -32,9 +31,8 @@ document.getElementById('similarity-form').addEventListener('submit', async func
     const tagsRows = tagsData.split('\n').map(row => row.split(','));
     const tagsMap = new Map(tagsRows.slice(1).map(row => {
         let tags = [];
-        for (let i = 1; i <= row.length - 1; i++) {
+        for (let i = 1; i < row.length - 1; i++) {
             let tag = row[i].trim();
-            console.log(tag);
             if (i === 1) {
                 tag = tag.replace(/^\[\s*'/, '');
             }
@@ -48,8 +46,7 @@ document.getElementById('similarity-form').addEventListener('submit', async func
         }
         return [row[0], tags];
     }));
-    console.log(tagsMap);
-    const difficultyMap = new Map(tagsRows.slice(1).map((row) => {return [row[0], row[row.length - 1]]}));
+    const difficultyMap = new Map(tagsRows.slice(1).map(row => [row[0], row[row.length - 1]]));
     let currentPage = 1;
     const resultsPerPage = 10;
     const totalPages = Math.ceil(similarities.length / resultsPerPage);
@@ -61,17 +58,9 @@ document.getElementById('similarity-form').addEventListener('submit', async func
         const start = (page - 1) * resultsPerPage;
         const end = start + resultsPerPage;
         const pageResults = similarities.slice(start, end);
-        
-        const [difficultyDict, tagsDict] = [{}, {}];
 
-        for (let [key, value] of difficultyMap.entries()) {
-            difficultyDict[key.trim()] = value;
-        }
-        for (let [key, value] of tagsMap.entries()) {
-            tagsDict[key.trim()] = value;
-        }
         pageResults.forEach(similarity => {
-            const difficulty = difficultyDict[`${similarity.fileName}`] || 'Unknown';
+            const difficulty = difficultyMap.get(similarity.fileName) || 'Unknown';
             if (difficulty === 'N/A') {
                 return;
             }
@@ -94,12 +83,11 @@ document.getElementById('similarity-form').addEventListener('submit', async func
 
             const topicsCell = document.createElement('td');
             topicsCell.classList.add('px-4', 'py-3', 'text-sm', 'text-gray-900', 'dark:text-gray-200');
-            const tags = tagsDict[similarity.fileName] || [];
+            const tags = tagsMap.get(similarity.fileName) || [];
             if (tags.length > 0) {
                 tags[0] = tags[0].replace(/^\\?"\['/, '');
                 tags[tags.length - 1] = tags[tags.length - 1].replace(/'\]\"$/, '');
             }
-            console.log(tags);
             tags.forEach(tag => {
                 const tagDiv = document.createElement('div');
                 tagDiv.classList.add('inline-flex', 'w-fit', 'items-center', 'whitespace-nowrap', 'border', 'text-xs', 'font-semibold', 'transition-colors', 'focus:outline-none', 'focus:ring-2', 'focus:ring-ring', 'focus:ring-offset-2', 'border-gray-300', 'bg-gray-100', 'text-gray-800', 'hover:bg-gray-200', 'rounded-md', 'px-2', 'py-1', 'm-1'); // Added 'm-1' for margin
@@ -127,8 +115,6 @@ document.getElementById('similarity-form').addEventListener('submit', async func
 
             resultsTable.appendChild(row);
         });
-
-        console.log((pageResults));
 
         document.getElementById('prev-page').disabled = page === 1;
         document.getElementById('next-page').disabled = page === totalPages;
@@ -160,7 +146,7 @@ document.getElementById('comparison-form').addEventListener('submit', async func
     const fileName1 = url1.split('/').slice(-2, -1)[0];
     const fileName2 = url2.split('/').slice(-2, -1)[0];
 
-    const response = await fetch('/Data_Set/similarities_with_scores.csv');
+    const response = await fetch('../Data_Set/similarities_with_scores.csv');
     const data = await response.text();
     const rows = data.split('\n').map(row => row.split(','));
     const headers = rows[0];
