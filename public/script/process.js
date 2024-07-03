@@ -5,7 +5,7 @@ document.getElementById('similarity-form').addEventListener('submit', async func
 
     document.getElementById('loading-spinner').classList.remove('hidden');
 
-    const response = await fetch('../Data_Set/similarities_with_scores.csv');
+    const response = await fetch('https://ulbgsvttyxeqwnev.public.blob.vercel-storage.com/similarities_with_scores-nYm33GWbVV85llXD4KBbZTGsU84LVs.csv');
     if (!response.ok) {
         console.error('Failed to fetch data:', response.status);
         return;
@@ -146,7 +146,7 @@ document.getElementById('comparison-form').addEventListener('submit', async func
     const fileName1 = url1.split('/').slice(-2, -1)[0];
     const fileName2 = url2.split('/').slice(-2, -1)[0];
 
-    const response = await fetch('../Data_Set/similarities_with_scores.csv');
+    const response = await fetch('https://ulbgsvttyxeqwnev.public.blob.vercel-storage.com/similarities_with_scores-nYm33GWbVV85llXD4KBbZTGsU84LVs.csv');
     const data = await response.text();
     const rows = data.split('\n').map(row => row.split(','));
     const headers = rows[0];
