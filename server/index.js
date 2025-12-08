@@ -19,8 +19,8 @@ app.use(express.json({ limit: '10kb' }));
 
 // Rate Limiting
 const limiter = rateLimit({
-  max: 100, // Limit each IP to 100 requests per windowMs
-  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 100, // Limit per IP per hour
+  windowMs: 60 * 60 * 1000,
   message: 'Too many requests from this IP, please try again in an hour!'
 });
 app.use('/api', limiter);
@@ -50,20 +50,17 @@ app.use('/api/health', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 
-  // Keep-Alive Logic for Render Free Tier
-  // Pings the server every 14 minutes (Render sleeps after 15m)
+  // Keep-Alive for Render (Free Tier)
   if (process.env.NODE_ENV === 'production') {
     const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-    
-    // Check if SERVER_URL is set, otherwise try to infer or fallback
     const SERVER_URL = process.env.SERVER_URL || `http://localhost:${PORT}`; 
 
     if (process.env.SERVER_URL) {
         setInterval(() => {
         fetch(`${SERVER_URL}/api/health`)
-            .then(() => console.log('Pinged server to keep alive'))
-            .catch(err => console.error('Ping failed:', err.message));
-        }, 14 * 60 * 1000); // 14 minutes
+            .then(() => console.log('Keep-alive ping successful'))
+            .catch(err => console.error('Keep-alive ping failed:', err.message));
+        }, 14 * 60 * 1000); // Ping every 14m
     }
   }
 });

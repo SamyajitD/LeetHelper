@@ -3,39 +3,34 @@
 
 @layer base {
   :root {
-    /* Primitive Colors - LeetCode Theme */
-    --color-primary-base: #FFA116; /* LeetCode Orange */
-    --color-primary-light-base: #FFC063; /* Lighter Orange */
-    --color-secondary-base: #00B8A3; /* LeetCode Green/Cyan */
+    --color-primary-base: #FFA116;
+    --color-primary-light-base: #FFC063;
+    --color-secondary-base: #00B8A3; 
     
-    /* Light Theme Semantic Vars */
-    --bg-color: #FFFFFF; /* High contrast white */
-    --surface-color: #F7F8FA; /* Light gray surface */
-    --text-color: #262626; /* Almost black */
+    --bg-color: #FFFFFF;
+    --surface-color: #F7F8FA; 
+    --text-color: #262626;
     --border-color: #DDDDDD;
   }
 
   :root.dark {
-    /* Primitive Colors - Dark */
     --color-primary-base: #FFA116; 
     --color-primary-light-base: #E58300; 
     --color-secondary-base: #00B8A3;
     
-    /* Dark Theme Semantic Vars */
-    --bg-color: #1A1A1A; /* LeetCode Dark BG */
-    --surface-color: #282828; /* LeetCode Dark Surface */
-    --text-color: #EFF1F6; /* Off-white */
+    --bg-color: #1A1A1A;
+    --surface-color: #282828;
+    --text-color: #EFF1F6;
     --border-color: #3E3E3E;
   }
 }
 
 @theme {
-  /* Map Tailwind vars to our dynamic CSS vars */
   --color-primary: var(--color-primary-base);
   --color-primary-light: var(--color-primary-light-base);
   --color-secondary: var(--color-secondary-base);
   
-  --color-surface-light: var(--surface-color); /* Mapping both to surface for backwards compat, or just use surface */
+  --color-surface-light: var(--surface-color);
   --color-surface-dark: var(--surface-color);
   
   --color-bg-light: var(--bg-color);
@@ -46,7 +41,6 @@
   --color-text-main: var(--text-color);
 }
 
-/* Custom Utilities for Material Elevation */
 @layer utilities {
   .elevation-1 {
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
@@ -66,7 +60,6 @@ body {
   background-attachment: fixed;
 }
 
-/* Override Browser Autofill Background */
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus, 
