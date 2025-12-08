@@ -1,0 +1,90 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@layer base {
+  :root {
+    /* Primitive Colors - LeetCode Theme */
+    --color-primary-base: #FFA116; /* LeetCode Orange */
+    --color-primary-light-base: #FFC063; /* Lighter Orange */
+    --color-secondary-base: #00B8A3; /* LeetCode Green/Cyan */
+    
+    /* Light Theme Semantic Vars */
+    --bg-color: #FFFFFF; /* High contrast white */
+    --surface-color: #F7F8FA; /* Light gray surface */
+    --text-color: #262626; /* Almost black */
+    --border-color: #DDDDDD;
+  }
+
+  :root.dark {
+    /* Primitive Colors - Dark */
+    --color-primary-base: #FFA116; 
+    --color-primary-light-base: #E58300; 
+    --color-secondary-base: #00B8A3;
+    
+    /* Dark Theme Semantic Vars */
+    --bg-color: #1A1A1A; /* LeetCode Dark BG */
+    --surface-color: #282828; /* LeetCode Dark Surface */
+    --text-color: #EFF1F6; /* Off-white */
+    --border-color: #3E3E3E;
+  }
+}
+
+@theme {
+  /* Map Tailwind vars to our dynamic CSS vars */
+  --color-primary: var(--color-primary-base);
+  --color-primary-light: var(--color-primary-light-base);
+  --color-secondary: var(--color-secondary-base);
+  
+  --color-surface-light: var(--surface-color); /* Mapping both to surface for backwards compat, or just use surface */
+  --color-surface-dark: var(--surface-color);
+  
+  --color-bg-light: var(--bg-color);
+  --color-bg-dark: var(--bg-color);
+  
+  --color-surface: var(--surface-color);
+  --color-background: var(--bg-color);
+  --color-text-main: var(--text-color);
+}
+
+/* Custom Utilities for Material Elevation */
+@layer utilities {
+  .elevation-1 {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  }
+  .elevation-3 {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+  }
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-image: 
+    linear-gradient(135deg, rgba(255, 161, 22, 0.05) 0%, rgba(0, 0, 0, 0) 30%),
+    linear-gradient(225deg, rgba(0, 184, 163, 0.05) 0%, rgba(0, 0, 0, 0) 30%);
+  background-attachment: fixed;
+}
+
+/* Override Browser Autofill Background */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px var(--bg-color) inset !important;
+    -webkit-text-fill-color: var(--text-color) !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+@layer utilities {
+  .force-contrast-text {
+    color: #000000 !important;
+  }
+}
+
+@layer utilities {
+  :root.dark .force-contrast-text {
+    color: #FFFFFF !important;
+  }
+}
+
